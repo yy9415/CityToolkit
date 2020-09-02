@@ -23,8 +23,8 @@ class Grid:
         self.num_col = int(np.ceil(self.width / size))
         self.num_row = int(np.ceil(self.height / size))
 
-        self.cols = np.linspace(max_lon, min_lon, num=self.num_col)
-        self.rows = np.linspace(max_lat, min_lat, num=self.num_row)
+        self.cols = np.linspace(max_lon, min_lon, num=self.num_col+1)
+        self.rows = np.linspace(max_lat, min_lat, num=self.num_row+1)
 
         # create matrix
         if extra_dims:
@@ -50,7 +50,7 @@ class Grid:
         return (lon<=self.region.max_lon) and (lon>self.region.min_lon) and (lat<=self.region.max_lat) and (lat>self.region.min_lat)
 
     def index_in_grid(self, row_id, col_id):
-        if (col_id >= self.num_col) or (col_id == 0) or (row_id >= self.num_row) or (row_id==0):
+        if (col_id > self.num_col) or (col_id == 0) or (row_id > self.num_row) or (row_id==0):
             return False
         else:
             return True
