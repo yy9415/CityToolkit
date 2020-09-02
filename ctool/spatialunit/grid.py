@@ -13,6 +13,7 @@ class Grid:
             self.region = region
         
         self.init_by_boundary(self.region.min_lat, self.region.max_lat, self.region.min_lon, self.region.max_lon, third_dim, size)
+        return self
 
     def init_by_boundary(self, min_lat, max_lat, min_lon, max_lon, third_dim=None, size=1000):
 
@@ -30,6 +31,7 @@ class Grid:
             self.tensor = np.zeros((self.num_row, self.num_col, third_dim))
         else:
             self.tensor = np.zeros((self.num_row, self.num_col))
+        return self
 
 
     def get_row_index(self, lat):
