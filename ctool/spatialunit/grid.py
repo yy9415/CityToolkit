@@ -1,34 +1,36 @@
 from ctool.spatialunit.region import Region
+from ctool.gis.distance import point_point_distance
+
 import numpy as np
 
 class Grid:
-
-    def __init__(self, city_geojson=None, region=None, size=1000):
+        
+    def init_by_region(self, city_geojson=None, region=None, third_dim=None, size=1000):
         assert (not city_geojson or not region)
         if not region:
             self.region = Region(city_geojson)
         else:
             self.region = region
-        self.width = self.region.width
-        self.height = self.region.height
+        
+        self.init_by_boundary(self.region.min_lat, self.region.max_lat, self.region.min_lon, self.region.max_lon, third_dim, size)
+
+    def init_by_boundary(self, min_lat, max_lat, min_lon, max_lon, third_dim=None, size=1000):
+
+        self.width = point_point_distance((min_lat, min_lon), (min_lat, max_lon))
+        self.height = point_point_distance((min_lat, min_lon), (max_lat, min_lon))
+        
         self.num_col = int(np.ceil(self.width / size))
         self.num_row = int(np.ceil(self.height / size))
-        self.cols = np.linspace(region.max_lon, region.min_lon, num=self.num_col)
-        self.rows = np.linspace(region.max_lat, region.min_lat, num=self.num_row)
+
+        self.cols = np.linspace(max_lon, min_lon, num=self.num_col)
+        self.rows = np.linspace(max_lat, min_lat, num=self.num_row)
 
         # create matrix
-        self.matrix = {}
-        for i in range(self.num_row):
-            if i not in self.matrix:
-                self.matrix[i] = {}
-            for j in range(self.num_col):
-                if j not in self.matrix[i]:
-                    self.matrix[i][j] = []
+        if third_dim:
+            self.tensor = np.zeros((self.num_row, self.num_col, third_dim))
+        else:
+            self.tensor = np.zeros((self.num_row, self.num_col))
 
-    def init_cell(self, fun):
-        for i in range(self.num_row):
-            for j in range(self.num_col):
-                self.matrix[i][j] = fun()
 
     def get_row_index(self, lat):
         return np.searchsorted(-self.rows, [-lat])[0]
