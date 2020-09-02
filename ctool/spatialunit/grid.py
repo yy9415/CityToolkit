@@ -5,17 +5,17 @@ import numpy as np
 
 class Grid:
         
-    def init_by_region(self, city_geojson=None, region=None, third_dim=None, size=1000):
+    def init_by_region(self, city_geojson=None, region=None, extra_dims=None, size=1000):
         assert (not city_geojson or not region)
         if not region:
             self.region = Region(city_geojson)
         else:
             self.region = region
         
-        self.init_by_boundary(self.region.min_lat, self.region.max_lat, self.region.min_lon, self.region.max_lon, third_dim, size)
+        self.init_by_boundary(self.region.min_lat, self.region.max_lat, self.region.min_lon, self.region.max_lon, extra_dims, size)
         return self
 
-    def init_by_boundary(self, min_lat, max_lat, min_lon, max_lon, third_dim=None, size=1000):
+    def init_by_boundary(self, min_lat, max_lat, min_lon, max_lon, extra_dims=None, size=1000):
 
         self.width = point_point_distance((min_lat, min_lon), (min_lat, max_lon))
         self.height = point_point_distance((min_lat, min_lon), (max_lat, min_lon))
@@ -27,8 +27,8 @@ class Grid:
         self.rows = np.linspace(max_lat, min_lat, num=self.num_row)
 
         # create matrix
-        if third_dim:
-            self.tensor = np.zeros((self.num_row, self.num_col, third_dim))
+        if extra_dims:
+            self.tensor = np.zeros((self.num_row, self.num_col, *extra_dims))
         else:
             self.tensor = np.zeros((self.num_row, self.num_col))
         return self
