@@ -17,8 +17,8 @@ class Grid:
 
     def init_by_boundary(self, min_lat, max_lat, min_lon, max_lon, extra_dims=None, size=1000):
 
-        self.width = point_point_distance((min_lat, min_lon), (min_lat, max_lon))
-        self.height = point_point_distance((min_lat, min_lon), (max_lat, min_lon))
+        self.width = point_point_distance((min_lon, min_lat), (max_lon, min_lat))
+        self.height = point_point_distance((min_lon, min_lat), (min_lon, max_lat))
         
         self.num_col = int(np.ceil(self.width / size))
         self.num_row = int(np.ceil(self.height / size))
@@ -54,3 +54,8 @@ class Grid:
             return False
         else:
             return True
+
+    def get_coordinates_from_grid_index(self, row_id, col_id):
+        if row_id == 0 or col_id == 0 or row_id > self.num_row or col_id > self.num_col:
+            return None
+        return self.rows[-row_id], self.cols[-col_id], self.rows[-row_id-1], self.cols[-col_id-1]
