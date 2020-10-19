@@ -56,6 +56,6 @@ class Grid:
             return True
 
     def get_coordinates_from_grid_index(self, row_id, col_id):
-        if row_id == 0 or col_id == 0 or row_id >= self.num_row or col_id >= self.num_col:
+        if row_id == 0 or col_id == 0 or row_id >= self.num_row-1 or col_id >= self.num_col-1:
             return None
         return self.rows[row_id], self.cols[col_id], self.rows[row_id+1], self.cols[col_id+1]
