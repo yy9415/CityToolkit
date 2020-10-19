@@ -35,7 +35,7 @@ class Grid:
 
 
     def get_row_index(self, lat):
-        return np.searchsorted(-self.rows, -[lat])[0] - 1
+        return np.searchsorted(-self.rows, [-lat])[0] - 1
 
     def get_col_index(self, lon):
         return np.searchsorted(self.cols, [lon])[0] - 1
