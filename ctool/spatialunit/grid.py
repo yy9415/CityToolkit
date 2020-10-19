@@ -23,8 +23,8 @@ class Grid:
         self.num_col = int(np.ceil(self.width / size))
         self.num_row = int(np.ceil(self.height / size))
 
-        self.cols = np.linspace(max_lon, min_lon, num=self.num_col+1)
-        self.rows = np.linspace(max_lat, min_lat, num=self.num_row+1)
+        self.cols = np.linspace(min_lon, max_lon, num=self.num_col)
+        self.rows = np.linspace(max_lat, min_lat, num=self.num_row)
 
         # create matrix
         if extra_dims:
@@ -35,16 +35,16 @@ class Grid:
 
 
     def get_row_index(self, lat):
-        return np.searchsorted(-self.rows, [-lat])[0] - 1
+        return np.searchsorted(self.rows, [lat])[0] - 1
 
     def get_col_index(self, lon):
-        return np.searchsorted(-self.cols, [-lon])[0] - 1
+        return np.searchsorted(self.cols, [lon])[0] - 1
 
     def get_index(self, lon, lat):
         return self.get_col_index(lon), self.get_row_index(lat)
 
     def get_all_index(self, lons, lats):
-        return np.searchsorted(-self.cols, -np.array(lons)) - 1, np.searchsorted(-self.rows, -np.array(lats)) - 1
+        return np.searchsorted(self.rows, np.array(lats)) - 1, np.searchsorted(self.cols, np.array(lons)) - 1
 
     def gps_in_grid(self, lon, lat):
         return (lon<=self.region.max_lon) and (lon>self.region.min_lon) and (lat<=self.region.max_lat) and (lat>self.region.min_lat)
@@ -58,4 +58,4 @@ class Grid:
     def get_coordinates_from_grid_index(self, row_id, col_id):
         if row_id == 0 or col_id == 0 or row_id > self.num_row or col_id > self.num_col:
             return None
-        return self.rows[-row_id], self.cols[-col_id], self.rows[-row_id-1], self.cols[-col_id-1]
+        return self.rows[row_id], self.cols[col_id], self.rows[row_id+1], self.cols[col_id+1]
